@@ -40,7 +40,6 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.components.Legend;
 import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 
 // http://blog.davidvassallo.me/2015/09/02/ble-health-devices-first-steps-with-android/
 // https://github.com/alt236/Bluetooth-LE-Library---Android
@@ -193,10 +192,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                     String lifetime_odometer = Integer.toString(mOWDevice.lifetimeOdometer.get());
                     String max_tilt_angle_pitch = Integer.toString(mOWDevice.maxTiltAnglePitch.get());
                     String max_tilt_angle_roll = Integer.toString(mOWDevice.maxTiltAngleRoll.get());
-                    mTracker.send(new HitBuilders.EventBuilder().setCategory("DeviceStats").setAction("speed_max_mph").setLabel(speed_max_mph).build());
-                    mTracker.send(new HitBuilders.EventBuilder().setCategory("DeviceStats").setAction("lifetime_odometer_miles").setLabel(lifetime_odometer).build());
-                    mTracker.send(new HitBuilders.EventBuilder().setCategory("DeviceStats").setAction("max_tilt_angle_pitch").setLabel(max_tilt_angle_pitch).build());
-                    mTracker.send(new HitBuilders.EventBuilder().setCategory("DeviceStats").setAction("max_tilt_angle_roll").setLabel(max_tilt_angle_roll).build());
                 } catch (Exception e) {
                 }
             }
@@ -301,7 +296,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     }
 
 
-    private Tracker mTracker;
 
 
     @Override
@@ -310,13 +304,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         super.onCreate(savedInstanceState);
 
         mContext = this;
-
-        AnalyticsApplication application = (AnalyticsApplication) getApplication();
-        mTracker = application.getDefaultTracker();
-        mTracker.enableAdvertisingIdCollection(true);
-        mTracker.setScreenName("MainActivity");
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
-
 
         mSharedPref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         mSharedPref.registerOnSharedPreferenceChangeListener(this);
@@ -471,7 +458,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         switch (item.getItemId()) {
             case R.id.menu_scan:
                 //mLeDeviceListAdapter.clear();
-                mTracker.send(new HitBuilders.EventBuilder().setCategory("Actions").setAction("Scan").build());
+//                mTracker.send(new HitBuilders.EventBuilder().setCategory("Actions").setAction("Scan").build());
                 mBluetoothLeScanner = mBluetoothAdapter.getBluetoothLeScanner();
                 settings = new ScanSettings.Builder().setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY).build();
                 filters = new ArrayList<ScanFilter>();
@@ -548,8 +535,8 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                 boolean metricUnitsState = sharedPreferences.getBoolean("metricUnits",false);
                 mOWDevice.metricUnits.set(metricUnitsState);
                 mOWDevice.refresh();
-                mTracker.send(new HitBuilders.EventBuilder().setCategory("SharedPreferences").setAction("metricUnits")
-                        .setLabel((metricUnitsState) ? "on" : "off").build());
+//                mTracker.send(new HitBuilders.EventBuilder().setCategory("SharedPreferences").setAction("metricUnits")
+//                        .setLabel((metricUnitsState) ? "on" : "off").build());
                 break;
 
             case "darkNightMode":
@@ -561,16 +548,16 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                 }
 
                 recreate();
-                mTracker.send(new HitBuilders.EventBuilder().setCategory("SharedPreferences").setAction("darkNightMode")
-                        .setLabel((checkDarkNightMode) ? "on" : "off").build());
+//                mTracker.send(new HitBuilders.EventBuilder().setCategory("SharedPreferences").setAction("darkNightMode")
+//                        .setLabel((checkDarkNightMode) ? "on" : "off").build());
                 break;
 
             default:
                 //XXX right now, all preferences are bools, but this could change in the future
               try {
                   boolean checkState = sharedPreferences.getBoolean(key, false);
-                  mTracker.send(new HitBuilders.EventBuilder().setCategory("SharedPreferences").setAction(key)
-                          .setLabel((checkState) ? "on" : "off").build());
+//                  mTracker.send(new HitBuilders.EventBuilder().setCategory("SharedPreferences").setAction(key)
+//                          .setLabel((checkState) ? "on" : "off").build());
                   break;
               } catch (Exception e) {}
 
@@ -950,7 +937,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                         mOWDevice.setLights(owGatService, mGatt, 0);
                     }
                 }
-                mTracker.send(new HitBuilders.EventBuilder().setCategory("Actions").setAction("Lights").setLabel((isChecked) ? "on" : "off").build());
+//                mTracker.send(new HitBuilders.EventBuilder().setCategory("Actions").setAction("Lights").setLabel((isChecked) ? "on" : "off").build());
             }
         });
 
@@ -967,7 +954,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
                     }
                 }
-                mTracker.send(new HitBuilders.EventBuilder().setCategory("Actions").setAction("CustomLights").setLabel((isChecked) ? "on" : "off").build());
+//                mTracker.send(new HitBuilders.EventBuilder().setCategory("Actions").setAction("CustomLights").setLabel((isChecked) ? "on" : "off").build());
             }
         });
 
@@ -982,7 +969,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                         mOWDevice.setCustomLights(owGatService, mGatt, 0,0,30);
                      }
                 }
-                mTracker.send(new HitBuilders.EventBuilder().setCategory("Actions").setAction("CustomLightsFrontBright").setLabel((isChecked) ? "on" : "off").build());
+//                mTracker.send(new HitBuilders.EventBuilder().setCategory("Actions").setAction("CustomLightsFrontBright").setLabel((isChecked) ? "on" : "off").build());
 
             }
         });
@@ -998,7 +985,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
                     }
                 }
-                mTracker.send(new HitBuilders.EventBuilder().setCategory("Actions").setAction("CustomLightsBackBright").setLabel((isChecked) ? "on" : "off").build());
+//                mTracker.send(new HitBuilders.EventBuilder().setCategory("Actions").setAction("CustomLightsBackBright").setLabel((isChecked) ? "on" : "off").build());
 
             }
         });
@@ -1026,7 +1013,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                     }
 
                 }
-                mTracker.send(new HitBuilders.EventBuilder().setCategory("Actions").setAction("CustomLightsFrontBlink").setLabel((isChecked) ? "on" : "off").build());
+//                mTracker.send(new HitBuilders.EventBuilder().setCategory("Actions").setAction("CustomLightsFrontBlink").setLabel((isChecked) ? "on" : "off").build());
 
             }
         });
@@ -1053,7 +1040,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                     }
 
                 }
-                mTracker.send(new HitBuilders.EventBuilder().setCategory("Actions").setAction("CustomLightsBackBlink").setLabel((isChecked) ? "on" : "off").build());
+//                mTracker.send(new HitBuilders.EventBuilder().setCategory("Actions").setAction("CustomLightsBackBlink").setLabel((isChecked) ? "on" : "off").build());
             }
         });
 
@@ -1068,7 +1055,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         mRideModeToggleButton.setOnValueChangedListener(new MultiStateToggleButton.OnValueChangedListener() {
             @Override
             public void onValueChanged(int position) {
-                mTracker.send(new HitBuilders.EventBuilder().setCategory("Actions").setAction("SetRideMode").setLabel(Integer.toString(position + 1)).build());
+//                mTracker.send(new HitBuilders.EventBuilder().setCategory("Actions").setAction("SetRideMode").setLabel(Integer.toString(position + 1)).build());
 
                 if (mOWConnected) {
                     mOWDevice.setRideMode(owGatService, mGatt, position + 1);
