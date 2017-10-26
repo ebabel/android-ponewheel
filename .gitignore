@@ -1,0 +1,15 @@
+.gradle
+/.gradletasknamecache
+/local.properties
+/.idea/vcs.xml
+/.idea/workspace.xml
+/.idea/gradle.xml
+/.idea/libraries
+/.idea/modules.xml
+/.idea/misc.xml
+/.idea/fileTemplates/internal
+/.idea/markdown-*
+.DS_Store
+/build
+/captures
+*.iml
